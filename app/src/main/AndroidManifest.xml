@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Volleyball"
         tools:targetApi="31">
         <activity
+            android:name=".previousMatchesStats"
+            android:exported="false" />
+        <activity
             android:name=".previousMatches"
             android:exported="false" />
         <activity
