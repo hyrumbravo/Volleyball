@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="blue">#297EDA</color>
-    <color name="bg">#383737</color>
-    <color name="timerbg">#494747</color>
-    <color name="red">#F72C2F</color>
+    <color name="black">#030303</color>
+    <color name="white">#fafafa</color>
+    <color name="violet">#0b081d</color>
+    <color name="gray">#e3e3e3</color>
+    <color name="team1_violet">#2624df</color>
+    <color name="team2_yellow">#f1d021</color>
 </resources>
