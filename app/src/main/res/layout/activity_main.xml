@@ -264,17 +264,21 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/statButton1"
                         android:text="SPIKE"
                         style="@style/stat_button_style"/>
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/statButton2"
                         android:text="BLOCK"
                         style="@style/stat_button_style"
                         android:layout_marginStart="10dp"/>
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/statButton3"
                         android:text="DIG"
                         style="@style/stat_button_style"
                         android:layout_marginStart="10dp"/>
                     <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/statButton4"
                         android:text="ACE"
                         style="@style/stat_button_style"
                         android:layout_marginStart="10dp"/>
@@ -291,14 +295,14 @@
                     android:layout_marginTop="10dp">
                     <ImageView
                         android:id="@+id/statsMinusButton"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:src="@drawable/score_minus_button"/>
 
                     <ImageView
                         android:id="@+id/statsAddButton"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
                         android:src="@drawable/score_add_button"
                         android:layout_marginStart="10dp"/>
 

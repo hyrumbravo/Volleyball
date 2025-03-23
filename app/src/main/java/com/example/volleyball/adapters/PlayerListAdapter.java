@@ -8,8 +8,10 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.volleyball.MainActivity;
 import com.example.volleyball.R;
-import com.example.volleyball.Utility.Utility;
+import com.example.volleyball.Utilities.Utility;
+import com.example.volleyball.databinding.ActivityMainBinding;
 import com.example.volleyball.models.Player;
 import com.example.volleyball.selectListeners.PlayerListSelectListener;
 import com.example.volleyball.viewholders.PlayerListItemViewHolder1;
@@ -22,6 +24,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
 
     Context context;
     List<Player> items;
+    ActivityMainBinding binding;
 
     PlayerListSelectListener listener;
 
@@ -29,6 +32,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
         this.context = context;
         this.items = items;
         this.listener = listener;
+        binding = MainActivity.binding;
     }
 
     @NonNull
@@ -43,7 +47,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
         holder.playerName.setText(items.get(position).getName());
 //        playerlist1 onItemClick
         holder.itemContainer.setOnClickListener(v -> {
-            listener.onItemClicked1(items.get(position));
+            listener.onItemClicked(items.get(position));
             if (v.getTag().toString().equalsIgnoreCase("selected")) {
                 v.setBackgroundResource(R.drawable.timer_bg); // set BG to default
                 v.setTag("unselected"); // set tag to unselected
@@ -60,7 +64,6 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
                         ContextCompat.getColor(context, R.color.white)
                 );
             }
-
 
         });
     }

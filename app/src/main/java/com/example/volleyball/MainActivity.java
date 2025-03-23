@@ -1,27 +1,32 @@
 package com.example.volleyball;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.volleyball.Utilities.Utility;
 import com.example.volleyball.adapters.PlayerListAdapter;
 import com.example.volleyball.databinding.ActivityMainBinding;
 import com.example.volleyball.models.Player;
 import com.example.volleyball.selectListeners.PlayerListSelectListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PlayerListSelectListener {
 
-    ActivityMainBinding binding;
+    public static ActivityMainBinding binding;
     List<Player> playerListItems1, playerListItems2;
+    ArrayList<AppCompatButton> statsButtons;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +41,13 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // declarations
         playerListItems1 = new ArrayList<>();
         playerListItems2 = new ArrayList<>();
+        statsButtons = new ArrayList<>(Arrays.asList(binding.statButton1, binding.statButton2,
+                binding.statButton3, binding.statButton4));
+            // stats buttons onclicks
+        binding.statButton1.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton1));
+        binding.statButton2.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton2));
+        binding.statButton3.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton3));
+        binding.statButton4.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton4));
 
         // player list 1
         playerListItems1.add(new Player("1", "Pile1"));
@@ -56,14 +68,12 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         playerListItems2.add(new Player("1", "Pile"));
         playerListItems2.add(new Player("1", "Del Rosario"));
 
-
         binding.teamListRecyclerview2.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview2.setAdapter(new PlayerListAdapter(this, playerListItems2, this));
-
     }
 
     @Override
-    public void onItemClicked1(Player player) {
+    public void onItemClicked(Player player) {
         Toast.makeText(this, player.getName(), Toast.LENGTH_SHORT).show();
     }
 
