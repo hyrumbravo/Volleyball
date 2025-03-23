@@ -237,6 +237,7 @@
 
 <!--    stats-->
     <RelativeLayout
+        android:id="@+id/statsMainContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/scoresContainer"
@@ -248,33 +249,113 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:scrollbars="none">
-            
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_horizontal">
-                
-                <androidx.appcompat.widget.AppCompatButton
-                    android:text="SPIKE"
-                    style="@style/stat_button_style" />
-                <androidx.appcompat.widget.AppCompatButton
-                    android:text="BLOCK"
-                    style="@style/stat_button_style"
-                    android:layout_marginStart="10dp"/>
-                <androidx.appcompat.widget.AppCompatButton
-                    android:text="DIG"
-                    style="@style/stat_button_style"
-                    android:layout_marginStart="10dp"/>
-                <androidx.appcompat.widget.AppCompatButton
-                    android:text="ACE"
-                    style="@style/stat_button_style"
-                    android:layout_marginStart="10dp"/>
 
-            </LinearLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/statsContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_horizontal"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:text="SPIKE"
+                        style="@style/stat_button_style"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:text="BLOCK"
+                        style="@style/stat_button_style"
+                        android:layout_marginStart="10dp"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:text="DIG"
+                        style="@style/stat_button_style"
+                        android:layout_marginStart="10dp"/>
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:text="ACE"
+                        style="@style/stat_button_style"
+                        android:layout_marginStart="10dp"/>
+                </LinearLayout>
+
+<!--                stats add and minus button-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    app:layout_constraintTop_toBottomOf="@id/statsContainer"
+                    app:layout_constraintStart_toStartOf="@id/statsContainer"
+                    app:layout_constraintEnd_toEndOf="@id/statsContainer"
+                    android:layout_marginTop="10dp">
+                    <ImageView
+                        android:id="@+id/statsMinusButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/score_minus_button"/>
+
+                    <ImageView
+                        android:id="@+id/statsAddButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/score_add_button"
+                        android:layout_marginStart="10dp"/>
+
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
             
         </HorizontalScrollView>
             
     </RelativeLayout>
 
+<!--    players list-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="310dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/statsMainContainer"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginVertical="15dp"
+        android:background="@drawable/square_gray">
+
+<!--        team1 players list-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/team1PlayersContainer"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/square_violet"
+            android:padding="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/teamListRecyclerview1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+<!--        team2 players list-->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/team2PlayersContainer"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/team1PlayersContainer"
+            android:layout_marginStart="10dp"
+            android:background="@drawable/square_yellow"
+            android:padding="10dp">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/teamListRecyclerview2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
