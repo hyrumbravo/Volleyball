@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
     PlayerListAdapter actualHomePlayersAdapter, actualGuestPlayersAdapter;
     ArrayList<AppCompatButton> statsButtons;
     HashMap<String, Stats> homePlayersStats, guestPlayersStats;
+    String selectedStat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,12 +57,14 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         actualHomePlayersAdapter = new PlayerListAdapter(this, homePlayersList, this);
         homePlayersStats = new HashMap<>();
         guestPlayersStats = new HashMap<>();
+        selectedStat = "";
 
             // stats buttons onclicks
-        binding.statButton1.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton1));
-        binding.statButton2.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton2));
-        binding.statButton3.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton3));
-        binding.statButton4.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton4));
+        binding.statButton1.setOnClickListener(v -> statsButtonOnClick(binding.statButton1));
+        binding.statButton2.setOnClickListener(v -> statsButtonOnClick(binding.statButton2));
+        binding.statButton3.setOnClickListener(v -> statsButtonOnClick(binding.statButton3));
+        binding.statButton4.setOnClickListener(v -> statsButtonOnClick(binding.statButton4));
+
             // tables add buttons onclick
         binding.addPlayerButton1.setOnClickListener(view ->
                 addPlayersToTable(binding.jerseyNumField1, binding.playerNameField1, homePlayersList, homeTableAdapter));
@@ -73,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         binding.addButton.setOnClickListener(view -> binding.addPlayersOverlay.setVisibility(View.VISIBLE));
             // savePlayers button onclick
         binding.saveButton.setOnClickListener(view -> savePlayers());
+            // statsButtons onclicks
+
 
 
 
@@ -102,8 +107,16 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
 
     void addPlayersToTable(EditText jerseyNumField1, EditText playerNameField1,
                        List<Player> playerList, PlayersTableAdapter adapter) {
+        // get jersey number and player name
         String jerseyNumber = jerseyNumField1.getText().toString();
         String playerName = playerNameField1.getText().toString();
+
+        // check if jersey number already exists
+        if (Utility.jerseyNumExists(playerList, jerseyNumber)) {
+            Toast.makeText(this, "Jersey number is already taken", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // check if fields are not empty
         if (jerseyNumber.isEmpty() || playerName.isEmpty()) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -124,5 +137,15 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // set actual players list items
         actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
         actualHomePlayersAdapter.updatePlayerList(homePlayersList);
+    }
+
+    void statsButtonOnClick(AppCompatButton statsButton) {
+        Utility.setStatsBackground(statsButtons, statsButton); // set stats button accordingly
+        selectedStat = statsButton.getText().toString(); // get stats button text
+
+        Toast.makeText(this, selectedStat, Toast.LENGTH_SHORT).show();
+    }
+    void updateStats() {
+
     }
 }

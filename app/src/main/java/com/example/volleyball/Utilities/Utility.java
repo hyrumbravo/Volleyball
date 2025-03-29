@@ -7,8 +7,10 @@ import android.widget.TextView;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.volleyball.R;
+import com.example.volleyball.models.Player;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Utility {
     public static void setTextColors(ArrayList<TextView> textViews, int color) {
@@ -48,5 +50,14 @@ public class Utility {
             }
             button.setBackgroundResource(R.drawable.square_gray);
         }
+    }
+
+    public static boolean jerseyNumExists(List<Player> playerList, String jerseyNum) {
+        for (Player player: playerList) {
+            if (player.getJerseyNumber().equals(jerseyNum)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
