@@ -1,7 +1,9 @@
 package com.example.volleyball;
 
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -14,19 +16,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.volleyball.Utilities.Utility;
 import com.example.volleyball.adapters.PlayerListAdapter;
+import com.example.volleyball.adapters.PlayersTableAdapter;
 import com.example.volleyball.databinding.ActivityMainBinding;
 import com.example.volleyball.models.Player;
+import com.example.volleyball.models.Stats;
 import com.example.volleyball.selectListeners.PlayerListSelectListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements PlayerListSelectListener {
 
     public static ActivityMainBinding binding;
-    List<Player> playerListItems1, playerListItems2;
+    List<Player> homePlayersList, guestPlayersList;
+    PlayersTableAdapter homeTableAdapter, guestTableAdapter;
+    PlayerListAdapter actualHomePlayersAdapter, actualGuestPlayersAdapter;
     ArrayList<AppCompatButton> statsButtons;
+
+    HashMap<String, Stats> homePlayersStats, guestPlayersStats;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,37 +48,54 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             return insets;
         });
         // declarations
-        playerListItems1 = new ArrayList<>();
-        playerListItems2 = new ArrayList<>();
+        homePlayersList = new ArrayList<>();
+        guestPlayersList = new ArrayList<>();
         statsButtons = new ArrayList<>(Arrays.asList(binding.statButton1, binding.statButton2,
                 binding.statButton3, binding.statButton4));
+        homeTableAdapter = new PlayersTableAdapter(this, homePlayersList);
+        guestTableAdapter = new PlayersTableAdapter(this, guestPlayersList);
+        actualHomePlayersAdapter = new PlayerListAdapter(this, homePlayersList, this);
+        actualGuestPlayersAdapter = new PlayerListAdapter(this, guestPlayersList, this);
+        homePlayersStats = new HashMap<>();
+        guestPlayersStats = new HashMap<>();
+
             // stats buttons onclicks
         binding.statButton1.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton1));
         binding.statButton2.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton2));
         binding.statButton3.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton3));
         binding.statButton4.setOnClickListener(v -> Utility.setStatsBackground(statsButtons, binding.statButton4));
+            // tables add buttons onclick
+        binding.addPlayerButton1.setOnClickListener(view ->
+                addHomePlayer(binding.jerseyNumField1, binding.playerNameField1));
+        binding.addPlayerButton2.setOnClickListener(view ->
+                addGuestPlayers(binding.jerseyNumField2, binding.playerNameField2));
+            // addPlayer overlay onclick
+        binding.addPlayersOverlay.setOnClickListener(view -> binding.addPlayersOverlay.setVisibility(View.GONE));
+            // add player icon onclick
+        binding.addButton.setOnClickListener(view -> binding.addPlayersOverlay.setVisibility(View.VISIBLE));
+            // savePlayers button onclick
+        binding.saveButton.setOnClickListener(view -> savePlayers());
+
+
 
         // player list 1
-        playerListItems1.add(new Player("1", "Pile1"));
-        playerListItems1.add(new Player("1", "Del Rosario1"));
-        playerListItems1.add(new Player("1", "Pile1"));
-        playerListItems1.add(new Player("1", "Del Rosario"));
-        playerListItems1.add(new Player("1", "Pile"));
-        playerListItems1.add(new Player("1", "Del Rosario"));
-
         binding.teamListRecyclerview1.setLayoutManager(new LinearLayoutManager(this));
-        binding.teamListRecyclerview1.setAdapter(new PlayerListAdapter(this, playerListItems1, this));
+        binding.teamListRecyclerview1.setAdapter(actualGuestPlayersAdapter);
 
         // player list 2
-        playerListItems2.add(new Player("1", "Pile"));
-        playerListItems2.add(new Player("1", "Del Rosario2"));
-        playerListItems2.add(new Player("1", "Pil2"));
-        playerListItems2.add(new Player("1", "Del Rosariooo"));
-        playerListItems2.add(new Player("1", "Pile"));
-        playerListItems2.add(new Player("1", "Del Rosario"));
-
         binding.teamListRecyclerview2.setLayoutManager(new LinearLayoutManager(this));
-        binding.teamListRecyclerview2.setAdapter(new PlayerListAdapter(this, playerListItems2, this));
+        binding.teamListRecyclerview2.setAdapter(actualGuestPlayersAdapter);
+
+        // players table1
+
+        binding.teamPlayersRecyclerView1.setLayoutManager(new LinearLayoutManager(this));
+        binding.teamPlayersRecyclerView1.setAdapter(homeTableAdapter);
+
+        // players table2
+
+        binding.teamPlayersRecyclerView2.setLayoutManager(new LinearLayoutManager(this));
+        binding.teamPlayersRecyclerView2.setAdapter(guestTableAdapter);
+
     }
 
     @Override
@@ -77,4 +103,44 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         Toast.makeText(this, player.getName(), Toast.LENGTH_SHORT).show();
     }
 
+    void addHomePlayer(EditText jerseyNumField1, EditText playerNameField1) {
+        String jerseyNumber = jerseyNumField1.getText().toString();
+        String playerName = playerNameField1.getText().toString();
+        // check if fields are not empty
+        if (jerseyNumber.isEmpty() || playerName.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // else, add player to table
+        homePlayersList.add(new Player(jerseyNumber, playerName));
+        homeTableAdapter.addPlayer(homePlayersList);
+        // clear fields
+        binding.jerseyNumField1.setText("");
+        binding.playerNameField1.setText("");
+
+    }
+
+    void addGuestPlayers(EditText jerseyNumField2, EditText playerNameField2) {
+        String jerseyNumber = jerseyNumField2.getText().toString();
+        String playerName = playerNameField2.getText().toString();
+        // check if fields are not empty
+        if (jerseyNumber.isEmpty() || playerName.isEmpty()) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // else, add player to table
+        guestPlayersList.add(new Player(jerseyNumber, playerName));
+        guestTableAdapter.addPlayer(guestPlayersList);
+        // clear fields
+        jerseyNumField2.setText("");
+        playerNameField2.setText("");
+    }
+
+    void savePlayers() {
+        // remove overlay
+        binding.addPlayersOverlay.setVisibility(View.GONE);
+        // set actual players list items
+        actualHomePlayersAdapter.updatePlayerList(homePlayersList);
+        actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
+    }
 }

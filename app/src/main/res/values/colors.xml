@@ -6,4 +6,7 @@
     <color name="gray">#e3e3e3</color>
     <color name="team1_violet">#2624df</color>
     <color name="team2_yellow">#f1d021</color>
+    <color name="overlay_color">#66000000</color>
+    <color name="table_header_gray">#e6e3e3</color>
+    <color name="green">#1eba47</color>
 </resources>

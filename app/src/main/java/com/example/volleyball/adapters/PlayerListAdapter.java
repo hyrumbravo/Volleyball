@@ -25,14 +25,17 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
     Context context;
     List<Player> items;
     ActivityMainBinding binding;
-
     PlayerListSelectListener listener;
-
     public PlayerListAdapter(Context context, List<Player> items, PlayerListSelectListener listener) {
         this.context = context;
         this.items = items;
         this.listener = listener;
         binding = MainActivity.binding;
+    }
+
+    public void updatePlayerList(List<Player> newList) {
+        this.items = newList;
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -45,6 +48,7 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
     public void onBindViewHolder(@NonNull PlayerListItemViewHolder1 holder, int position) {
         holder.jerseyNumber.setText(items.get(position).getJerseyNumber());
         holder.playerName.setText(items.get(position).getName());
+
 //        playerlist1 onItemClick
         holder.itemContainer.setOnClickListener(v -> {
             listener.onItemClicked(items.get(position));

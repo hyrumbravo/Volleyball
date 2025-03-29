@@ -9,6 +9,204 @@
     android:background="@drawable/app_bg"
     >
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/addPlayersOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay_color"
+        android:elevation="1dp">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scrollbars="none">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/soft_squre_white"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginTop="20dp"
+                    android:padding="15dp">
+<!--                    team1 table-->
+                    <TextView
+                        android:id="@+id/teamName1"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="Home"
+                        style="@style/form_team_name_style"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/teamTableHeader1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/teamName1"
+                        android:background="@drawable/soft_square_gray"
+                        android:paddingVertical="7dp"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/jerseyNumHeader1"
+                            android:text="Jersey No."
+                            style="@style/jersery_num_header"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/playerNameHeader1"
+                            style="@style/playerTableHeaderText"
+                            android:text="Name"
+                            app:layout_constraintStart_toEndOf="@id/jerseyNumHeader1"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/teamPlayersRecyclerView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/teamTableHeader1"/>
+
+                    <EditText
+                        android:id="@+id/jerseyNumField1"
+                        app:layout_constraintTop_toBottomOf="@id/teamPlayersRecyclerView1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:hint="0"
+                        style="@style/jerseynum_field" />
+
+                    <EditText
+                        android:id="@+id/playerNameField1"
+                        app:layout_constraintTop_toTopOf="@id/jerseyNumField1"
+                        app:layout_constraintStart_toEndOf="@id/jerseyNumField1"
+                        app:layout_constraintEnd_toStartOf="@id/addPlayerButton1"
+                        app:layout_constraintBottom_toBottomOf="@id/jerseyNumField1"
+                        android:hint="Name"
+                        style="@style/player_name_field" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/addPlayerButton1"
+                        android:layout_width="55dp"
+                        android:layout_height="25dp"
+                        android:text="Add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/jerseyNumField1"
+                        app:layout_constraintBottom_toBottomOf="@id/jerseyNumField1"
+                        android:textAllCaps="false"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:background="@drawable/square_violet"
+                        />
+
+<!--                    team2 table-->
+                    <TextView
+                        android:id="@+id/teamName2"
+                        app:layout_constraintTop_toBottomOf="@id/jerseyNumField1"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="Guest"
+                        android:textColor="@color/team2_yellow"
+                        style="@style/form_team_name_style"
+                        android:layout_marginTop="20dp"/>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/teamTableHeader2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/teamName2"
+                        android:background="@drawable/soft_square_gray"
+                        android:paddingVertical="7dp"
+                        android:layout_marginTop="10dp">
+
+                        <TextView
+                            android:id="@+id/jerseyNumHeader2"
+                            android:text="Jersey No."
+                            style="@style/jersery_num_header"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent" />
+
+                        <TextView
+                            android:id="@+id/playerNameHeader2"
+                            style="@style/playerTableHeaderText"
+                            android:text="Name"
+                            app:layout_constraintStart_toEndOf="@id/jerseyNumHeader2"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"/>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/teamPlayersRecyclerView2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/teamTableHeader2"/>
+
+                    <EditText
+                        android:id="@+id/jerseyNumField2"
+                        app:layout_constraintTop_toBottomOf="@id/teamPlayersRecyclerView2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:hint="0"
+                        style="@style/jerseynum_field" />
+
+                    <EditText
+                        android:id="@+id/playerNameField2"
+                        app:layout_constraintTop_toTopOf="@id/jerseyNumField2"
+                        app:layout_constraintStart_toEndOf="@id/jerseyNumField2"
+                        app:layout_constraintEnd_toStartOf="@id/addPlayerButton2"
+                        app:layout_constraintBottom_toBottomOf="@id/jerseyNumField2"
+                        android:hint="Name"
+                        style="@style/player_name_field" />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/addPlayerButton2"
+                        android:layout_width="55dp"
+                        android:layout_height="25dp"
+                        android:text="Add"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/jerseyNumField2"
+                        app:layout_constraintBottom_toBottomOf="@id/jerseyNumField2"
+                        android:textAllCaps="false"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:background="@drawable/square_yellow"
+                        />
+
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/saveButton"
+                        android:layout_width="70dp"
+                        android:layout_height="30dp"
+                        android:text="SAVE"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/jerseyNumField2"
+                        android:fontFamily="@font/roboto_bold"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:background="@drawable/soft_square_green"
+                        android:layout_marginTop="30dp"
+                        />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </ScrollView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <ImageView
         android:id="@+id/addButton"
         android:layout_width="@dimen/home_button"
@@ -127,6 +325,7 @@
                 style="@style/team_name_style" />
 
             <TextView
+                android:id="@+id/team1SetScore"
                 android:text="0"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -143,6 +342,7 @@
             android:layout_marginStart="10dp">
 
             <TextView
+                android:id="@+id/team2SetScore"
                 android:text="0"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -322,8 +522,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginVertical="15dp"
-        android:background="@drawable/square_gray">
+        android:layout_marginVertical="15dp">
 
 <!--        team1 players list-->
         <androidx.constraintlayout.widget.ConstraintLayout
