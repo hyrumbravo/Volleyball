@@ -93,9 +93,10 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // statsButtons onclicks
         binding.statsMinusButton.setOnClickListener(view -> deductStatToPlayer(selectedPlayer, selectedStat));
         binding.statsAddButton.setOnClickListener(view -> addStatToPlayer(selectedPlayer, selectedStat));
-        // settings onclicks
-        binding.settingsOverlay.setOnClickListener(view -> binding.settingsOverlay.setVisibility(View.GONE));
-        binding.settingsPopup.setOnClickListener(view -> {});
+        // settingsSaveButton onclick
+        binding.settingsSaveButton.setOnClickListener(view -> saveSettings());
+        // settings overlay onclick
+        binding.settingsOverlay.setOnClickListener(view -> {});
         // home score add and minus buttons onclicks
         binding.team1AddButton.setOnClickListener(view -> {
             addScoreToHome();
@@ -115,13 +116,13 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             setGuestScore();
         });
 
-        // settings
-        settings = new Settings(3, 25, 15, 2, 60);
-
         // player list 1
         homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
         homePlayersList.add(new Player("2", "Parale")); // add sample playe
         homePlayersList.add(new Player("3", "Carrido")); // add sample player
+        homePlayersList.add(new Player("5", "Delos Santos")); // add sample player
+        homePlayersList.add(new Player("6", "Parale")); // add sample playe
+        homePlayersList.add(new Player("7", "Carrido")); // add sample player
 
         binding.teamListRecyclerview1.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview1.setAdapter(actualHomePlayersAdapter);
@@ -130,6 +131,9 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         guestPlayersList.add(new Player("1", "Dela Cruz")); // add sample player
         guestPlayersList.add(new Player("2", "Paynado")); // add sample player
         guestPlayersList.add(new Player("3", "Calbario")); // add sample player
+        guestPlayersList.add(new Player("4", "Dela Cruz")); // add sample player
+        guestPlayersList.add(new Player("5", "Paynado")); // add sample player
+        guestPlayersList.add(new Player("6", "Calbario")); // add sample player
 
         binding.teamListRecyclerview2.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview2.setAdapter(actualGuestPlayersAdapter);
@@ -142,6 +146,37 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         binding.teamPlayersRecyclerView2.setLayoutManager(new LinearLayoutManager(this));
         binding.teamPlayersRecyclerView2.setAdapter(guestTableAdapter);
 
+    }
+
+    private void saveSettings() {
+        String setsToWin = binding.setsTowin.getText().toString();
+        String pointsPerSet = binding.pointsPerSet.getText().toString();
+        String pointsForFinalSet = binding.pointsForFinalSet.getText().toString();
+        String timeOuts = binding.timeOuts.getText().toString();
+        String timeoutDuration = binding.timeoutDuration.getText().toString();
+
+        // check if all setting is field
+        if (!Utility.allEditTextAreFilled(new ArrayList<>(Arrays.asList(binding.setsTowin, binding.pointsPerSet,
+                binding.pointsForFinalSet, binding.timeOuts, binding.timeoutDuration)))) {
+            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // check if all settings are > 0
+        if (!Utility.allStringsAreGreaterThanZero(new ArrayList<>(Arrays.asList(setsToWin, pointsPerSet,
+                pointsForFinalSet, timeOuts, timeoutDuration)))) {
+            Toast.makeText(this, "Please enter a value greater than 0", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // set Settings
+        settings = new Settings(Integer.parseInt(setsToWin), Integer.parseInt(pointsPerSet), Integer.parseInt(pointsForFinalSet),
+                Integer.parseInt(timeOuts), Integer.parseInt(timeoutDuration));
+        // set actual players list items
+        actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
+        actualHomePlayersAdapter.updatePlayerList(homePlayersList);
+        // set stats
+        setUpStats();
+        // remove overlay
+        binding.settingsOverlay.setVisibility(View.GONE);
     }
 
     private void deductScoreFromGuest() {
@@ -279,13 +314,13 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         playerNameField1.setText("");
     }
     void savePlayers() {
+        // chech if both teams have minimum of 6 players
+        if (homePlayersList.size() < 6 || guestPlayersList.size() < 6) {
+            Toast.makeText(this, "Please add at least 6 players to each team", Toast.LENGTH_SHORT).show();
+            return;
+        }
         // remove overlay
         binding.addPlayersOverlay.setVisibility(View.GONE);
-        // set actual players list items
-        actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
-        actualHomePlayersAdapter.updatePlayerList(homePlayersList);
-        // set stats
-        setUpStats();
     }
     void statsButtonOnClick(AppCompatButton statsButton) {
         Utility.setStatsBackground(statsButtons, statsButton); // set stats button accordingly

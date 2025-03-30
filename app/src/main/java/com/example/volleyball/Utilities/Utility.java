@@ -3,6 +3,7 @@ package com.example.volleyball.Utilities;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -171,5 +172,23 @@ public class Utility {
         }
 
         return titleCase.toString().trim();
+    }
+
+    public static boolean allEditTextAreFilled(ArrayList<EditText> fields) {
+        for (EditText field: fields) {
+            if (field.getText().toString().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static boolean allStringsAreGreaterThanZero(ArrayList<String> strings) {
+        for (String string: strings) {
+            if (Integer.parseInt(string) <= 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }

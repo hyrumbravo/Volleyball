@@ -69,7 +69,7 @@
 
                     <EditText
                         android:id="@+id/setsTowin"
-                        android:text="22"
+                        android:text="2"
                         style="@style/setting_input" />
 
                 </LinearLayout>
@@ -86,7 +86,7 @@
 
                     <EditText
                         android:id="@+id/pointsPerSet"
-                        android:text="22"
+                        android:text="25"
                         style="@style/setting_input" />
 
                 </LinearLayout>
@@ -103,7 +103,7 @@
 
                     <EditText
                         android:id="@+id/pointsForFinalSet"
-                        android:text="22"
+                        android:text="15"
                         style="@style/setting_input" />
 
                 </LinearLayout>
@@ -120,7 +120,7 @@
 
                     <EditText
                         android:id="@+id/timeOuts"
-                        android:text="22"
+                        android:text="2"
                         style="@style/setting_input" />
 
                 </LinearLayout>
@@ -137,7 +137,7 @@
 
                     <EditText
                         android:id="@+id/timeoutDuration"
-                        android:text="22"
+                        android:text="60"
                         style="@style/setting_input" />
 
                 </LinearLayout>
