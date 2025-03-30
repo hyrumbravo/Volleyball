@@ -71,7 +71,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">13sp</item>
     </style>
@@ -107,5 +106,29 @@
         <item name="android:paddingStart">10dp</item>
         <item name="android:textColor">@color/black</item>
         <item name="android:inputType">textPersonName</item>
+    </style>
+
+    <style name="setting_label">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="setting_input">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/gray_outline</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:maxLength">2</item>
+        <item name="android:inputType">number</item>
+        <item name="android:layout_marginStart">5dp</item>
+        <item name="android:paddingVertical">3dp</item>
+        <item name="android:paddingHorizontal">6dp</item>
+        <item name="minWidth">27dp</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

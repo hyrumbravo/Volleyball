@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
@@ -9,12 +10,168 @@
     android:background="@drawable/app_bg"
     >
 
+<!--    settings overlay-->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/settingsOverlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/overlay_color"
+        android:elevation="1dp"
+        android:visibility="gone">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settingsPopup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:background="@drawable/soft_squre_white"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="20dp"
+            android:padding="15dp">
+
+            <TextView
+                android:id="@+id/settingsTitle"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:text="Match Setup"
+                android:textSize="18sp"
+                android:textColor="@color/dark_gray"
+                style="@style/form_team_name_style"/>
+            
+            <View
+                android:id="@+id/settingsDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                app:layout_constraintTop_toBottomOf="@id/settingsTitle"
+                android:layout_marginTop="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/settingsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/settingsDivider"
+                android:background="@drawable/gray_outline"
+                android:layout_marginTop="13dp"
+                android:padding="10dp"
+                android:orientation="vertical"
+                >
+<!--                sets to win-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:text="Sets to Win:"
+                        style="@style/setting_label" />
+
+                    <EditText
+                        android:id="@+id/setsTowin"
+                        android:text="22"
+                        style="@style/setting_input" />
+
+                </LinearLayout>
+<!--                winning points per set-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:text="Winning Points per Set:"
+                        style="@style/setting_label" />
+
+                    <EditText
+                        android:id="@+id/pointsPerSet"
+                        android:text="22"
+                        style="@style/setting_input" />
+
+                </LinearLayout>
+<!--                winning points for final set-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:text="Winning Points for Final Set:"
+                        style="@style/setting_label" />
+
+                    <EditText
+                        android:id="@+id/pointsForFinalSet"
+                        android:text="22"
+                        style="@style/setting_input" />
+
+                </LinearLayout>
+<!--                number of timeouts-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:text="Number of Timeouts:"
+                        style="@style/setting_label" />
+
+                    <EditText
+                        android:id="@+id/timeOuts"
+                        android:text="22"
+                        style="@style/setting_input" />
+
+                </LinearLayout>
+<!--                timeout duration-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp">
+
+                    <TextView
+                        android:text="Timeout Duration (Seconds):"
+                        style="@style/setting_label" />
+
+                    <EditText
+                        android:id="@+id/timeoutDuration"
+                        android:text="22"
+                        style="@style/setting_input" />
+
+                </LinearLayout>
+            </LinearLayout>
+
+<!--            settings save button-->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/settingsSaveButton"
+                android:layout_width="70dp"
+                android:layout_height="30dp"
+                android:text="SAVE"
+                android:fontFamily="@font/roboto_bold"
+                android:textColor="@color/white"
+                android:textSize="12sp"
+                android:background="@drawable/soft_square_green"
+                android:layout_marginTop="15dp"
+                app:layout_constraintTop_toBottomOf="@id/settingsContainer"
+                app:layout_constraintEnd_toEndOf="@id/settingsContainer"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<!--    add players overlay-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/addPlayersOverlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/overlay_color"
-        android:elevation="1dp">
+        android:elevation="1dp"
+        android:visibility="gone">
 
         <ScrollView
             android:layout_width="match_parent"
@@ -494,6 +651,7 @@
                     app:layout_constraintStart_toStartOf="@id/statsContainer"
                     app:layout_constraintEnd_toEndOf="@id/statsContainer"
                     android:layout_marginTop="10dp">
+
                     <ImageView
                         android:id="@+id/statsMinusButton"
                         android:layout_width="25dp"

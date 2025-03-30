@@ -49,26 +49,9 @@ public class PlayerListAdapter extends RecyclerView.Adapter<PlayerListItemViewHo
         holder.jerseyNumber.setText(items.get(position).getJerseyNumber());
         holder.playerName.setText(items.get(position).getName());
 
-//        playerlist1 onItemClick
+        // playerlist1 onItemClick
         holder.itemContainer.setOnClickListener(v -> {
             listener.onItemClicked(items.get(position));
-            if (v.getTag().toString().equalsIgnoreCase("selected")) {
-                v.setBackgroundResource(R.drawable.timer_bg); // set BG to default
-                v.setTag("unselected"); // set tag to unselected
-                Utility.setTextColors( // set text colors to violet
-                        new ArrayList<>(Arrays.asList(holder.jerseyNumber, holder.playerName)),
-                        ContextCompat.getColor(context, R.color.violet)
-                );
-            }
-            else {
-                v.setBackgroundResource(R.drawable.seleted_player_bg); // set BG to selected
-                v.setTag("selected"); // set tag to selected
-                Utility.setTextColors( // set text colors to white
-                        new ArrayList<>(Arrays.asList(holder.jerseyNumber, holder.playerName)),
-                        ContextCompat.getColor(context, R.color.white)
-                );
-            }
-
         });
     }
 
