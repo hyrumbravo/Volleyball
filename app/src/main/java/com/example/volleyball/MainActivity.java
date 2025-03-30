@@ -18,11 +18,13 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.volleyball.Database.DatabaseHelper;
 import com.example.volleyball.Utilities.Utility;
 import com.example.volleyball.adapters.PlayerListAdapter;
 import com.example.volleyball.adapters.PlayersTableAdapter;
 import com.example.volleyball.databinding.ActivityMainBinding;
 import com.example.volleyball.models.Player;
+import com.example.volleyball.models.Settings;
 import com.example.volleyball.models.Stats;
 import com.example.volleyball.selectListeners.PlayerListSelectListener;
 
@@ -43,6 +45,11 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
 
     Player selectedPlayer;
     boolean homePlayer;
+
+    int homeCurrentScore, guestCurrentScore;
+
+    DatabaseHelper dbHelper;
+    Settings settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,44 +75,61 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         guestPlayersStats = new HashMap<>();
         selectedStat = "";
 
-            // stats buttons onclicks
+        // stats buttons onclicks
         binding.statButton1.setOnClickListener(v -> statsButtonOnClick(binding.statButton1));
         binding.statButton2.setOnClickListener(v -> statsButtonOnClick(binding.statButton2));
         binding.statButton3.setOnClickListener(v -> statsButtonOnClick(binding.statButton3));
         binding.statButton4.setOnClickListener(v -> statsButtonOnClick(binding.statButton4));
 
-            // tables add buttons onclick
+        // tables add buttons onclick
         binding.addPlayerButton1.setOnClickListener(view ->
                 addPlayersToTable(binding.jerseyNumField1, binding.playerNameField1, homePlayersList, homeTableAdapter));
         binding.addPlayerButton2.setOnClickListener(view ->
                 addPlayersToTable(binding.jerseyNumField2, binding.playerNameField2, guestPlayersList, guestTableAdapter));
-            // addPlayer overlay onclick
-        binding.addPlayersOverlay.setOnClickListener(view -> binding.addPlayersOverlay.setVisibility(View.GONE));
-            // add player icon onclick
-        binding.addButton.setOnClickListener(view -> binding.addPlayersOverlay.setVisibility(View.VISIBLE));
-            // savePlayers button onclick
+        // addPlayer overlay onclick
+        binding.addPlayersOverlay.setOnClickListener(view -> {});
+        // savePlayers button onclick
         binding.saveButton.setOnClickListener(view -> savePlayers());
-            // statsButtons onclicks
+        // statsButtons onclicks
         binding.statsMinusButton.setOnClickListener(view -> deductStatToPlayer(selectedPlayer, selectedStat));
         binding.statsAddButton.setOnClickListener(view -> addStatToPlayer(selectedPlayer, selectedStat));
-            // settings onclicks
-        binding.settingsButton.setOnClickListener(view -> binding.settingsOverlay.setVisibility(View.VISIBLE));
+        // settings onclicks
         binding.settingsOverlay.setOnClickListener(view -> binding.settingsOverlay.setVisibility(View.GONE));
         binding.settingsPopup.setOnClickListener(view -> {});
+        // home score add and minus buttons onclicks
+        binding.team1AddButton.setOnClickListener(view -> {
+            addScoreToHome();
+            setHomeScore();
+        });
+        binding.team1MinusButton.setOnClickListener(view -> {
+            deductScoreFromHome();
+            setHomeScore();
+        });
+        // guest score add and minus buttons onclicks
+        binding.team2AddButton.setOnClickListener(view -> {
+            addScoreToGuest();
+            setGuestScore();
+        });
+        binding.team2MinusButton.setOnClickListener(view -> {
+            deductScoreFromGuest();
+            setGuestScore();
+        });
 
+        // settings
+        settings = new Settings(3, 25, 15, 2, 60);
 
         // player list 1
-        homePlayersList.add(new Player("1", "Sample")); // add sample player
-        homePlayersList.add(new Player("2", "Sample2")); // add sample playe
-        homePlayersList.add(new Player("3", "Sample3")); // add sample player
+        homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
+        homePlayersList.add(new Player("2", "Parale")); // add sample playe
+        homePlayersList.add(new Player("3", "Carrido")); // add sample player
 
         binding.teamListRecyclerview1.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview1.setAdapter(actualHomePlayersAdapter);
 
         // player list 2
-        guestPlayersList.add(new Player("1", "Sample")); // add sample player
-        guestPlayersList.add(new Player("2", "Sample2")); // add sample player
-        guestPlayersList.add(new Player("3", "Sample3")); // add sample player
+        guestPlayersList.add(new Player("1", "Dela Cruz")); // add sample player
+        guestPlayersList.add(new Player("2", "Paynado")); // add sample player
+        guestPlayersList.add(new Player("3", "Calbario")); // add sample player
 
         binding.teamListRecyclerview2.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview2.setAdapter(actualGuestPlayersAdapter);
@@ -120,7 +144,46 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
 
     }
 
+    private void deductScoreFromGuest() {
+        // check if current score is 0
+        if (guestCurrentScore == 0) {
+            return;
+        }
+        guestCurrentScore--;
+    }
+
+    private void addScoreToGuest() {
+        guestCurrentScore++;
+    }
+
+    private void deductScoreFromHome() {
+        // check if current score is 0
+        if (homeCurrentScore == 0) {
+            return;
+        }
+        homeCurrentScore--;
+    }
+
+    private void addScoreToHome() {
+        homeCurrentScore++;
+    }
+
+    private void setHomeScore() {
+        String homeScore = String.format("%2s", String.valueOf(homeCurrentScore)).replace(' ', '0');
+        binding.teamScore1.setText(homeScore);
+    }
+
+    private void setGuestScore() {
+        String guestScore = String.format("%2s", String.valueOf(guestCurrentScore)).replace(' ', '0');
+        binding.teamScore2.setText(guestScore);
+    }
+
+
     private void addStatToPlayer(Player selectedPlayer, String selectedStat) {
+        // check if selections there are selections
+        if (selectedPlayer == null || selectedStat.isEmpty()) {
+            return;
+        }
         // check if home player
         if (homePlayer) {
             Utility.addStat(homePlayersStats, selectedPlayer, selectedStat, this, binding.main, true);
@@ -131,6 +194,10 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
     }
 
     private void deductStatToPlayer(Player selectedPlayer, String selectedStat) {
+        // check if selections there are selections
+        if (selectedPlayer == null || selectedStat.isEmpty()) {
+            return;
+        }
         // check if home player
         if (homePlayer) {
             Utility.deductStat(homePlayersStats, selectedPlayer, selectedStat, this, binding.main, true);
@@ -188,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         }
     }
     void addPlayersToTable(EditText jerseyNumField1, EditText playerNameField1,
-                       List<Player> playerList, PlayersTableAdapter adapter) {
+                           List<Player> playerList, PlayersTableAdapter adapter) {
         // get jersey number and player name
         String jerseyNumber = jerseyNumField1.getText().toString();
         String playerName = playerNameField1.getText().toString();
