@@ -1,5 +1,6 @@
 package com.example.volleyball;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -41,13 +42,10 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
     PlayerListAdapter actualHomePlayersAdapter, actualGuestPlayersAdapter;
     ArrayList<AppCompatButton> statsButtons;
     HashMap<Player, Stats> homePlayersStats, guestPlayersStats;
-    String selectedStat;
-
+    String selectedStat, commaSeparatedHomeSetScores, commaSeparatedGuestSetScores;
     Player selectedPlayer;
     boolean homePlayer;
-
-    int homeCurrentScore, guestCurrentScore;
-
+    int homeCurrentScore, guestCurrentScore, homeSetScore, guestSetScore, setNumber;
     DatabaseHelper dbHelper;
     Settings settings;
 
@@ -74,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         homePlayersStats = new HashMap<>();
         guestPlayersStats = new HashMap<>();
         selectedStat = "";
+        commaSeparatedGuestSetScores = "";
+        commaSeparatedHomeSetScores = "";
+        setNumber = 0;
 
         // stats buttons onclicks
         binding.statButton1.setOnClickListener(v -> statsButtonOnClick(binding.statButton1));
@@ -98,23 +99,16 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // settings overlay onclick
         binding.settingsOverlay.setOnClickListener(view -> {});
         // home score add and minus buttons onclicks
-        binding.team1AddButton.setOnClickListener(view -> {
-            addScoreToHome();
-            setHomeScore();
-        });
-        binding.team1MinusButton.setOnClickListener(view -> {
-            deductScoreFromHome();
-            setHomeScore();
-        });
+        binding.team1AddButton.setOnClickListener(view -> addScoreToHome());
+        binding.team1MinusButton.setOnClickListener(view -> deductScoreFromHome());
         // guest score add and minus buttons onclicks
-        binding.team2AddButton.setOnClickListener(view -> {
-            addScoreToGuest();
-            setGuestScore();
-        });
-        binding.team2MinusButton.setOnClickListener(view -> {
-            deductScoreFromGuest();
-            setGuestScore();
-        });
+        binding.team2AddButton.setOnClickListener(view -> addScoreToGuest());
+        binding.team2MinusButton.setOnClickListener(view -> deductScoreFromGuest());
+        // timeouts onlicks
+        binding.teamTimeoutIcon1.setOnClickListener(view -> Utility.startCountdown(binding.teamTimeout1, settings.getTimeoutDuration(), this));
+        binding.teamTimeoutIcon2.setOnClickListener(view -> Utility.startCountdown(binding.teamTimeout2, settings.getTimeoutDuration(), this));
+        // match history onclick
+        binding.matchHistory.setOnClickListener(view -> Utility.navigateToActivity(this, new Intent(this, MatchHistoryPage.class)));
 
         // player list 1
         homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
@@ -168,8 +162,9 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             return;
         }
         // set Settings
+        int finalSet = (Integer.parseInt(setsToWin) - 1) *2;
         settings = new Settings(Integer.parseInt(setsToWin), Integer.parseInt(pointsPerSet), Integer.parseInt(pointsForFinalSet),
-                Integer.parseInt(timeOuts), Integer.parseInt(timeoutDuration));
+                Integer.parseInt(timeOuts), Integer.parseInt(timeoutDuration), finalSet);
         // set actual players list items
         actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
         actualHomePlayersAdapter.updatePlayerList(homePlayersList);
@@ -178,42 +173,79 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // remove overlay
         binding.settingsOverlay.setVisibility(View.GONE);
     }
-
     private void deductScoreFromGuest() {
         // check if current score is 0
         if (guestCurrentScore == 0) {
             return;
         }
         guestCurrentScore--;
+        setGuestScore();
     }
-
-    private void addScoreToGuest() {
-        guestCurrentScore++;
-    }
-
     private void deductScoreFromHome() {
         // check if current score is 0
         if (homeCurrentScore == 0) {
             return;
         }
         homeCurrentScore--;
+        setHomeScore();
     }
-
+    private void addScoreToGuest() {
+        guestCurrentScore++;
+        setGuestScore();
+        // check if score is equal to points per set
+        if (guestCurrentScore == settings.getPointsPerSet()) {
+            // set guest set score
+            guestSetScore++;
+            binding.team2SetScore.setText(String.valueOf(guestSetScore));
+            resetScore(); // reset score
+        }
+    }
     private void addScoreToHome() {
         homeCurrentScore++;
+        setHomeScore();
+        // check if score is equal to points per set
+        if (homeCurrentScore == settings.getPointsPerSet()) {
+            // set home set score
+            homeSetScore++;
+            binding.team1SetScore.setText(String.valueOf(homeSetScore));
+            resetScore(); // reset score
+        }
     }
 
+    private void resetScore() {
+        // add comma separated set scores
+        commaSeparatedHomeSetScores += String.valueOf(homeSetScore) + ",";
+        commaSeparatedGuestSetScores += String.valueOf(guestSetScore) + ",";
+        // reset score
+        homeCurrentScore = 0;
+        guestCurrentScore = 0;
+        setNumber++;
+        // set points per set to final set points if set number is equal to final set
+        if (setNumber == settings.getFinalSet()) {
+            settings.setPointsPerSet(settings.getFinalSetPoints());
+        }
+        setHomeScore();
+        setGuestScore();
+        // check if set score is equal to sets to win
+        if (homeSetScore == settings.getSetsToWin()) {
+            // display endgame overlay
+            binding.endgameTitle.setText("Home Wins!");
+            binding.endGameOverlay.setVisibility(View.VISIBLE);
+        }
+        else if (guestSetScore == settings.getSetsToWin()){
+            binding.endgameTitle.setText("Guest Wins!");
+            binding.endGameOverlay.setVisibility(View.VISIBLE);
+        }
+
+    }
     private void setHomeScore() {
         String homeScore = String.format("%2s", String.valueOf(homeCurrentScore)).replace(' ', '0');
         binding.teamScore1.setText(homeScore);
     }
-
     private void setGuestScore() {
         String guestScore = String.format("%2s", String.valueOf(guestCurrentScore)).replace(' ', '0');
         binding.teamScore2.setText(guestScore);
     }
-
-
     private void addStatToPlayer(Player selectedPlayer, String selectedStat) {
         // check if selections there are selections
         if (selectedPlayer == null || selectedStat.isEmpty()) {
@@ -227,7 +259,6 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             Utility.addStat(guestPlayersStats, selectedPlayer, selectedStat, this, binding.main, false);
         }
     }
-
     private void deductStatToPlayer(Player selectedPlayer, String selectedStat) {
         // check if selections there are selections
         if (selectedPlayer == null || selectedStat.isEmpty()) {
@@ -241,7 +272,6 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             Utility.deductStat(guestPlayersStats, selectedPlayer, selectedStat, this, binding.main, false);
         }
     }
-
     @Override
     public void onItemClicked(Player player) {
         // select players
@@ -255,7 +285,6 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             selectPlayers(binding.teamListRecyclerview2, player, guestPlayersList, binding.teamListRecyclerview1);
         }
     }
-
     void selectPlayers(RecyclerView recyclerView, Player player, List<Player> players, RecyclerView opposingRecyclerview) {
         for (int i = 0; i < recyclerView.getChildCount(); i++) {
             View itemView = recyclerView.getChildAt(i);

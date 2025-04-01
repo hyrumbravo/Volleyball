@@ -1,7 +1,11 @@
 package com.example.volleyball.Utilities;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
+import android.media.MediaPlayer;
+import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -23,6 +27,11 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Utility {
+
+    public static CountDownTimer countDownTimer;
+    public static boolean isTimeoutOngoing = false;
+
+    public static MediaPlayer mediaPlayer;
     public static void setTextColors(ArrayList<TextView> textViews, int color) {
         for (TextView textView: textViews) {
             textView.setTextColor(color);
@@ -190,5 +199,43 @@ public class Utility {
             }
         }
         return true;
+    }
+
+    public static void startCountdown(TextView textView, int seconds, Context context) {
+        if (!isTimeoutOngoing) {
+            isTimeoutOngoing = true;
+            if (countDownTimer != null) {
+                countDownTimer.cancel(); // Cancel any existing countdown
+            }
+
+            countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    int secondsRemaining = (int) (millisUntilFinished / 1000);
+                    textView.setText(String.format("%02d", secondsRemaining));
+                }
+
+                @Override
+                public void onFinish() {
+                    playSound(context);
+                    textView.setText("00"); // Set text to "0" when countdown finishes
+                    isTimeoutOngoing = false;
+                }
+            }.start();
+        }
+    }
+
+    public static void playSound(Context context) {
+        if (mediaPlayer != null) {
+            mediaPlayer.release(); // Release any previous MediaPlayer instance
+        }
+
+        mediaPlayer = MediaPlayer.create(context, R.raw.buzzer);
+        mediaPlayer.start();
+    }
+
+    public static void navigateToActivity(Activity activity, Intent intent) {
+        activity.startActivity(intent);
+        activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
     }
 }

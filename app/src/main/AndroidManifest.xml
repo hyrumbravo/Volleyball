@@ -13,6 +13,9 @@
         android:theme="@style/Theme.Volleyball"
         tools:targetApi="31">
         <activity
+            android:name=".MatchHistoryPage"
+            android:exported="true" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
