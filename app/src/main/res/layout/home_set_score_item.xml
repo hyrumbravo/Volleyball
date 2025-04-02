@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingEnd="10dp">
+
+    <TextView
+        android:id="@+id/setNumber"
+        android:text="Set 1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/match_history_set_label"/>
+
+    <TextView
+        android:id="@+id/setScore"
+        app:layout_constraintTop_toBottomOf="@id/setNumber"
+        app:layout_constraintStart_toStartOf="@id/setNumber"
+        app:layout_constraintEnd_toEndOf="@id/setNumber"
+        android:text="20"
+        style="@style/match_history_set_score" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
