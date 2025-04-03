@@ -509,14 +509,14 @@
         style="@style/timeout_icon" />
 <!--    timer counts-->
     <TextView
-        android:id="@+id/teamRemainingTimeout1"
+        android:id="@+id/homeRemainingTimeout"
         android:text="2"
         app:layout_constraintEnd_toStartOf="@id/teamTimeoutIcon1"
         app:layout_constraintBottom_toTopOf="@id/teamTimeoutIcon1"
         style="@style/timeout_count_style" />
 
     <TextView
-        android:id="@+id/teamRemainingTimeout2"
+        android:id="@+id/guestRemainingTimeout"
         android:text="2"
         app:layout_constraintStart_toEndOf="@id/teamTimeoutIcon2"
         app:layout_constraintBottom_toTopOf="@id/teamTimeoutIcon2"

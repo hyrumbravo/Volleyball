@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/playerStatsContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal"
+        android:paddingVertical="6dp">
+
+        <TextView
+            android:id="@+id/playerName"
+            android:text="8 Bravo"
+            android:layout_width="85dp"
+            style="@style/stats_table_item_cell_text"/>
+
+        <TextView
+            android:id="@+id/spike"
+            android:text="33"
+            android:layout_width="40dp"
+            style="@style/stats_table_item_cell_text" />
+
+        <TextView
+            android:id="@+id/block"
+            android:text="33"
+            android:layout_width="40dp"
+            style="@style/stats_table_item_cell_text" />
+
+        <TextView
+            android:id="@+id/dig"
+            android:text="33"
+            android:layout_width="40dp"
+            style="@style/stats_table_item_cell_text" />
+
+        <TextView
+            android:id="@+id/ace"
+            android:text="33"
+            android:layout_width="40dp"
+            style="@style/stats_table_item_cell_text"
+            android:layout_marginEnd="0dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        app:layout_constraintTop_toBottomOf="@id/playerStatsContainer"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

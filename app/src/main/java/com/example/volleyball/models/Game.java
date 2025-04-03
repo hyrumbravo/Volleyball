@@ -2,13 +2,15 @@ package com.example.volleyball.models;
 
 public class Game {
     String team1Score, team2Score, timestamp, homeSetScores, guestSetScores;
+    int id;
 
-    public Game(String team1Score, String team2Score, String timestamp, String homeSetScores, String guestSetScores) {
+    public Game(int id, String team1Score, String team2Score, String timestamp, String homeSetScores, String guestSetScores) {
         this.team1Score = team1Score;
         this.team2Score = team2Score;
         this.timestamp = timestamp;
         this.homeSetScores = homeSetScores;
         this.guestSetScores = guestSetScores;
+        this.id = id;
     }
 
     public String getTeam1Score() {
@@ -49,5 +51,8 @@ public class Game {
 
     public void setGuestSetScores(String guestSetScores) {
         this.guestSetScores = guestSetScores;
+    }
+    public int getId() {
+        return id;
     }
 }

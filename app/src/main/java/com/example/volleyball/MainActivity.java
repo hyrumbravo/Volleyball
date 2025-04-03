@@ -1,7 +1,9 @@
 package com.example.volleyball;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements PlayerListSelectListener {
 
@@ -48,6 +51,10 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
     int homeCurrentScore, guestCurrentScore, homeSetScore, guestSetScore, setNumber;
     DatabaseHelper dbHelper;
     Settings settings;
+
+    int homeRemainingTimeouts, guestRemainingTimeouts;
+    CountDownTimer countDownTimer;
+    boolean isTimeoutOngoing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +82,8 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         commaSeparatedGuestSetScores = "";
         commaSeparatedHomeSetScores = "";
         setNumber = 0;
+            // database
+        dbHelper = new DatabaseHelper(this);
 
         // stats buttons onclicks
         binding.statButton1.setOnClickListener(v -> statsButtonOnClick(binding.statButton1));
@@ -105,10 +114,12 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         binding.team2AddButton.setOnClickListener(view -> addScoreToGuest());
         binding.team2MinusButton.setOnClickListener(view -> deductScoreFromGuest());
         // timeouts onlicks
-        binding.teamTimeoutIcon1.setOnClickListener(view -> Utility.startCountdown(binding.teamTimeout1, settings.getTimeoutDuration(), this));
-        binding.teamTimeoutIcon2.setOnClickListener(view -> Utility.startCountdown(binding.teamTimeout2, settings.getTimeoutDuration(), this));
+        binding.teamTimeoutIcon1.setOnClickListener(view -> timeoutOnclick(binding.teamTimeout1, settings.getTimeoutDuration(), true));
+        binding.teamTimeoutIcon2.setOnClickListener(view -> timeoutOnclick(binding.teamTimeout2, settings.getTimeoutDuration(), false));
         // match history onclick
         binding.matchHistory.setOnClickListener(view -> Utility.navigateToActivity(this, new Intent(this, MatchHistoryPage.class)));
+        // endgame button onclick
+        binding.endGameButton.setOnClickListener(view -> endGameButtonOnClick());
 
         // player list 1
         homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
@@ -142,6 +153,15 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
 
     }
 
+    private void endGameButtonOnClick() {
+        binding.endGameOverlay.setVisibility(View.GONE);
+        binding.addPlayersOverlay.setVisibility(View.VISIBLE);
+        binding.settingsOverlay.setVisibility(View.VISIBLE);
+    }
+
+    private void timeoutOnclick(TextView teamTimeout, int timeoutDuration, boolean homeTeam) {
+        startCountdown(teamTimeout, timeoutDuration, this, homeTeam);
+    }
     private void saveSettings() {
         String setsToWin = binding.setsTowin.getText().toString();
         String pointsPerSet = binding.pointsPerSet.getText().toString();
@@ -168,6 +188,9 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // set actual players list items
         actualGuestPlayersAdapter.updatePlayerList(guestPlayersList);
         actualHomePlayersAdapter.updatePlayerList(homePlayersList);
+        // set remaining timeouts
+        homeRemainingTimeouts = settings.getTimeouts();
+        guestRemainingTimeouts = settings.getTimeouts();
         // set stats
         setUpStats();
         // remove overlay
@@ -211,11 +234,10 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             resetScore(); // reset score
         }
     }
-
     private void resetScore() {
         // add comma separated set scores
-        commaSeparatedHomeSetScores += String.valueOf(homeSetScore) + ",";
-        commaSeparatedGuestSetScores += String.valueOf(guestSetScore) + ",";
+        commaSeparatedHomeSetScores += String.valueOf(homeCurrentScore) + ",";
+        commaSeparatedGuestSetScores += String.valueOf(guestCurrentScore) + ",";
         // reset score
         homeCurrentScore = 0;
         guestCurrentScore = 0;
@@ -231,13 +253,42 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             // display endgame overlay
             binding.endgameTitle.setText("Home Wins!");
             binding.endGameOverlay.setVisibility(View.VISIBLE);
+            saveGameToDB();
         }
         else if (guestSetScore == settings.getSetsToWin()){
             binding.endgameTitle.setText("Guest Wins!");
             binding.endGameOverlay.setVisibility(View.VISIBLE);
+            saveGameToDB();
         }
-
     }
+
+    private void saveGameToDB() {
+        // save game to DB
+        long gameId = dbHelper.insertGame(homeSetScore, guestSetScore, Utility.getCurrentTimestamp()
+                , commaSeparatedHomeSetScores, commaSeparatedGuestSetScores);
+        // show saved data to log
+        Log.d("Database", "Home Set Score: " + homeSetScore);
+        Log.d("Database", "Guest Set Score: " + guestSetScore);
+        Log.d("Database", "Timestamp: " + Utility.getCurrentTimestamp());
+        Log.d("Database", "Comma Separated Home Set Scores: " + commaSeparatedHomeSetScores);
+        Log.d("Database", "Comma Separated Guest Set Scores: " + commaSeparatedGuestSetScores);
+        Log.d("Database", "Game ID: " + gameId);
+        // save home stats
+        for (Map.Entry<Player, Stats> entry : homePlayersStats.entrySet()) {
+            Stats stats = entry.getValue();
+            long result = dbHelper.insertStat(gameId, "home", stats.getPlayerName(),
+                    stats.getSpike(), stats.getBlock(), stats.getDig(), stats.getAce());
+            Log.d("Database", "Result: " + result);
+        }
+        // save guest stats
+        for (Map.Entry<Player, Stats> entry : guestPlayersStats.entrySet()) {
+            Stats stats = entry.getValue();
+            long result = dbHelper.insertStat(gameId, "guest", stats.getPlayerName(),
+                    stats.getSpike(), stats.getBlock(), stats.getDig(), stats.getAce());
+            Log.d("Database", "Result: " + result);
+        }
+    }
+
     private void setHomeScore() {
         String homeScore = String.format("%2s", String.valueOf(homeCurrentScore)).replace(' ', '0');
         binding.teamScore1.setText(homeScore);
@@ -365,6 +416,34 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         for (int i = 0; i < guestPlayersList.size(); i++) {
             guestPlayersStats.put(guestPlayersList.get(i),
                     new Stats("guest", guestPlayersList.get(i).getName(), 0, 0, 0, 0));
+        }
+    }
+    void startCountdown(TextView textView, int seconds, Context context, boolean homeTeam) {
+        if (!isTimeoutOngoing && (homeTeam && homeRemainingTimeouts > 0 || !homeTeam && guestRemainingTimeouts > 0)) {
+            isTimeoutOngoing = true;
+            // check if home team and deduct 1 to team's remaining timeouts
+            if (homeTeam) {
+                homeRemainingTimeouts--;
+                binding.homeRemainingTimeout.setText(String.valueOf(homeRemainingTimeouts));
+            }
+            else {
+                guestRemainingTimeouts--;
+                binding.guestRemainingTimeout.setText(String.valueOf(guestRemainingTimeouts));
+            }
+            countDownTimer = new CountDownTimer(seconds * 1000, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    int secondsRemaining = (int) (millisUntilFinished / 1000);
+                    textView.setText(String.format("%02d", secondsRemaining));
+                }
+
+                @Override
+                public void onFinish() {
+                    Utility.playSound(context);
+                    textView.setText("00"); // Set text to "0" when countdown finishes
+                    isTimeoutOngoing = false;
+                }
+            }.start();
         }
     }
 }

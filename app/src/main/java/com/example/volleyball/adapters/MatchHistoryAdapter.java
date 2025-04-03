@@ -3,12 +3,15 @@ package com.example.volleyball.adapters;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.volleyball.Database.DatabaseHelper;
 import com.example.volleyball.R;
 import com.example.volleyball.models.Game;
+import com.example.volleyball.selectListeners.MatchHistoryItemSelectListener;
 import com.example.volleyball.viewholders.MatchHistoryItemViewHolder;
 
 import java.util.List;
@@ -17,9 +20,12 @@ public class MatchHistoryAdapter extends RecyclerView.Adapter<MatchHistoryItemVi
     Context context;
     List<Game> items;
 
-    public MatchHistoryAdapter(Context context, List<Game> items) {
+    MatchHistoryItemSelectListener listener;
+
+    public MatchHistoryAdapter(Context context, List<Game> items, MatchHistoryItemSelectListener listener) {
         this.context = context;
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -30,12 +36,27 @@ public class MatchHistoryAdapter extends RecyclerView.Adapter<MatchHistoryItemVi
 
     @Override
     public void onBindViewHolder(@NonNull MatchHistoryItemViewHolder holder, int position) {
+        DatabaseHelper dbHelper = new DatabaseHelper(context);
+        
         holder.homeScore.setText(String.valueOf(items.get(position).getTeam1Score()));
         holder.guestScore.setText(String.valueOf(items.get(position).getTeam2Score()));
         // delete button onclick
         holder.deleteButton.setOnClickListener(v -> {
             items.remove(position);
-            notifyDataSetChanged();
+            // delete game record
+//            boolean isDeleted = dbHelper.deleteGameById(items.get(position).getId());
+//            // check if deletion is successful
+//            if (isDeleted) {
+//                Toast.makeText(context, "Game record deleted successfully.", Toast.LENGTH_SHORT).show();
+//                notifyDataSetChanged();
+//            } else {
+//                Toast.makeText(context, "Game deletion Failed", Toast.LENGTH_SHORT).show();
+//            }
+
+        });
+        // item container onclick
+        holder.itemContainer.setOnClickListener(v -> {
+            listener.onItemClicked(items.get(position));
         });
     }
 
