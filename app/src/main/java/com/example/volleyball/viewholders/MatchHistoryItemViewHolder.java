@@ -19,7 +19,6 @@ public class MatchHistoryItemViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         homeScore = itemView.findViewById(R.id.homeScore);
         guestScore = itemView.findViewById(R.id.guestScore);
-        deleteButton = itemView.findViewById(R.id.deleteButton);
         itemContainer = itemView.findViewById(R.id.itemContainer);
     }
 }

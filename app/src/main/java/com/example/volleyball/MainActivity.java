@@ -2,6 +2,7 @@ package com.example.volleyball;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // restrict activity's landscape view
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // declarations
         homePlayersList = new ArrayList<>();
         guestPlayersList = new ArrayList<>();
@@ -122,23 +125,23 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         binding.endGameButton.setOnClickListener(view -> endGameButtonOnClick());
 
         // player list 1
-        homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
-        homePlayersList.add(new Player("2", "Parale")); // add sample playe
-        homePlayersList.add(new Player("3", "Carrido")); // add sample player
-        homePlayersList.add(new Player("5", "Delos Santos")); // add sample player
-        homePlayersList.add(new Player("6", "Parale")); // add sample playe
-        homePlayersList.add(new Player("7", "Carrido")); // add sample player
+//        homePlayersList.add(new Player("1", "Delos Santos")); // add sample player
+//        homePlayersList.add(new Player("2", "Parale")); // add sample playe
+//        homePlayersList.add(new Player("3", "Carrido")); // add sample player
+//        homePlayersList.add(new Player("5", "Delos Santos")); // add sample player
+//        homePlayersList.add(new Player("6", "Parale")); // add sample playe
+//        homePlayersList.add(new Player("7", "Carrido")); // add sample player
 
         binding.teamListRecyclerview1.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview1.setAdapter(actualHomePlayersAdapter);
 
         // player list 2
-        guestPlayersList.add(new Player("1", "Dela Cruz")); // add sample player
-        guestPlayersList.add(new Player("2", "Paynado")); // add sample player
-        guestPlayersList.add(new Player("3", "Calbario")); // add sample player
-        guestPlayersList.add(new Player("4", "Dela Cruz")); // add sample player
-        guestPlayersList.add(new Player("5", "Paynado")); // add sample player
-        guestPlayersList.add(new Player("6", "Calbario")); // add sample player
+//        guestPlayersList.add(new Player("1", "Dela Cruz")); // add sample player
+//        guestPlayersList.add(new Player("2", "Paynado")); // add sample player
+//        guestPlayersList.add(new Player("3", "Calbario")); // add sample player
+//        guestPlayersList.add(new Player("4", "Dela Cruz")); // add sample player
+//        guestPlayersList.add(new Player("5", "Paynado")); // add sample player
+//        guestPlayersList.add(new Player("6", "Calbario")); // add sample player
 
         binding.teamListRecyclerview2.setLayoutManager(new LinearLayoutManager(this));
         binding.teamListRecyclerview2.setAdapter(actualGuestPlayersAdapter);
@@ -287,6 +290,32 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
                     stats.getSpike(), stats.getBlock(), stats.getDig(), stats.getAce());
             Log.d("Database", "Result: " + result);
         }
+        // reset game variables
+            // player list
+        homePlayersList.clear();
+        guestPlayersList.clear();
+            // notify adapter
+        homeTableAdapter.notifyDataSetChanged();
+        guestTableAdapter.notifyDataSetChanged();
+            // current scores
+        homeCurrentScore = 0;
+        guestCurrentScore = 0;
+            // set scores
+        homeSetScore = 0;
+        guestSetScore = 0;
+            // set number
+        setNumber = 0;
+            // comma separated set scores
+        commaSeparatedHomeSetScores = "";
+        commaSeparatedGuestSetScores = "";
+            // stats
+        homePlayersStats.clear();
+        guestPlayersStats.clear();
+            // reset UI elements current data
+        binding.team1SetScore.setText("0");
+        binding.team2SetScore.setText("0");
+        binding.team1SetScore.setText("0");
+        binding.team2SetScore.setText("0");
     }
 
     private void setHomeScore() {
@@ -410,12 +439,14 @@ public class MainActivity extends AppCompatActivity implements PlayerListSelectL
         // set up home players stats
         for (int i = 0; i < homePlayersList.size(); i++) {
             homePlayersStats.put(homePlayersList.get(i),
-                    new Stats("home", homePlayersList.get(i).getName(), 0, 0, 0, 0));
+                    new Stats("home", homePlayersList.get(i).getJerseyNumber() + " " +
+                            homePlayersList.get(i).getName(), 0, 0, 0, 0));
         }
         // set up guest players stats
         for (int i = 0; i < guestPlayersList.size(); i++) {
             guestPlayersStats.put(guestPlayersList.get(i),
-                    new Stats("guest", guestPlayersList.get(i).getName(), 0, 0, 0, 0));
+                    new Stats("guest", guestPlayersList.get(i).getJerseyNumber() + " " +
+                            guestPlayersList.get(i).getName(), 0, 0, 0, 0));
         }
     }
     void startCountdown(TextView textView, int seconds, Context context, boolean homeTeam) {

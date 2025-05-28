@@ -40,20 +40,7 @@ public class MatchHistoryAdapter extends RecyclerView.Adapter<MatchHistoryItemVi
         
         holder.homeScore.setText(String.valueOf(items.get(position).getTeam1Score()));
         holder.guestScore.setText(String.valueOf(items.get(position).getTeam2Score()));
-        // delete button onclick
-        holder.deleteButton.setOnClickListener(v -> {
-            items.remove(position);
-            // delete game record
-//            boolean isDeleted = dbHelper.deleteGameById(items.get(position).getId());
-//            // check if deletion is successful
-//            if (isDeleted) {
-//                Toast.makeText(context, "Game record deleted successfully.", Toast.LENGTH_SHORT).show();
-//                notifyDataSetChanged();
-//            } else {
-//                Toast.makeText(context, "Game deletion Failed", Toast.LENGTH_SHORT).show();
-//            }
 
-        });
         // item container onclick
         holder.itemContainer.setOnClickListener(v -> {
             listener.onItemClicked(items.get(position));

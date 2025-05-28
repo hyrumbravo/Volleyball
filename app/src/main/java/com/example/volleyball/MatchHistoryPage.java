@@ -1,5 +1,6 @@
 package com.example.volleyball;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +28,7 @@ import java.util.List;
 
 import android.content.pm.ActivityInfo;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
 
@@ -44,6 +46,7 @@ public class MatchHistoryPage extends AppCompatActivity implements MatchHistoryI
     GuestSetScoreAdapter guestSetScoreAdapter;
     StatsTableAdapter homeStatsAdapter, guestStatsAdapter;
     DatabaseHelper dbHelper;
+    int clickedGameId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,8 @@ public class MatchHistoryPage extends AppCompatActivity implements MatchHistoryI
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        // restrict activity's landscape view
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         // This callback will intercept the back button press
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -88,7 +93,9 @@ public class MatchHistoryPage extends AppCompatActivity implements MatchHistoryI
 
             // onclicks
         binding.backButton.setOnClickListener(v -> whenBackIsPressed());
-        binding.gameDetailsOverlay.setOnClickListener(view -> view.setVisibility(View.GONE));
+        binding.closeGameDetailsButton.setOnClickListener(view -> binding.gameDetailsOverlay.setVisibility(View.GONE));
+        binding.gameDetailsPopup.setOnClickListener(view -> {});
+        binding.deleteMatchHistoryButton.setOnClickListener(view -> deleteGame(clickedGameId));
 
 
         // match history
@@ -113,6 +120,33 @@ public class MatchHistoryPage extends AppCompatActivity implements MatchHistoryI
         binding.guestStatsRecyclerview.setLayoutManager(new LinearLayoutManager(this));
         binding.guestStatsRecyclerview.setAdapter(guestStatsAdapter);
 
+        // check if match history is empty
+        if (games.isEmpty()) {
+            binding.emptyMatchHistoryText.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    private void deleteGame(int clickedGameId) {
+        new AlertDialog.Builder(this)
+                .setTitle("Confirm Deletion")
+                .setMessage("Are you sure you want to delete this game?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    // Delete the log from the database
+                    boolean isDeleted = dbHelper.deleteGameById(clickedGameId);
+                    if (isDeleted) {
+                        Toast.makeText(this, "Game deleted successfully.", Toast.LENGTH_SHORT).show();
+                        recreate();
+
+                    } else {
+                        Toast.makeText(this, "Deletion unsuccessful.", Toast.LENGTH_SHORT).show();
+                    }
+
+                })
+                .setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss())
+                .show();
+        // delete clicked game
+
     }
 
     private void whenBackIsPressed() {
@@ -121,30 +155,55 @@ public class MatchHistoryPage extends AppCompatActivity implements MatchHistoryI
 
     @Override
     public void onItemClicked(Game game) {
-        binding.gameDetailsOverlay.setVisibility(View.VISIBLE);
+        // set clicked game id
+        clickedGameId = game.getId();
+        // clear previous data
+        homeSetScores.clear();
+        guestSetScores.clear();
+        homeStats.clear();
+        guestStats.clear();
         // get home stats
         homeStats.addAll(dbHelper.getStatsByGameId(game.getId(), "home"));
         // get guest stats
         guestStats.addAll(dbHelper.getStatsByGameId(game.getId(), "guest"));
+        // set home set scores
+        setHomeSetScores(game);
+        // set guest set scores
+        setGuestSetScores(game);
+        // update stats list
+        homeStatsAdapter.updateStatsList(homeStats);
+        guestStatsAdapter.updateStatsList(guestStats);
+        // update guest set score list
+        binding.gameDetailsOverlay.setVisibility(View.VISIBLE);
+
+    }
+
+    private void setHomeSetScores(Game game) {
         // get home set scores
             // remove last comma
-        String clickedGameSetScores = game.getHomeSetScores().substring(0, game.getHomeSetScores().length() - 1);
+        String clickedGameHomeSetScores = game.getHomeSetScores().substring(0, game.getHomeSetScores().length() - 1);
             // split to array list
-        ArrayList<String>  clickedGameHomeSetScores = splitToArrayList(clickedGameSetScores, ",");
+        ArrayList<String>  homeSetScore = splitToArrayList(clickedGameHomeSetScores, ",");
         // set home set scores
-        for (int i = 0; i < clickedGameHomeSetScores.size(); i++) {
-            homeSetScores.add(new SetScore( "Set "+ String.valueOf(i + 1), clickedGameHomeSetScores.get(i)));
+        for (int i = 0; i < homeSetScore.size(); i++) {
+            homeSetScores.add(new SetScore( "Set "+ String.valueOf(i + 1), homeSetScore.get(i)));
         }
+        // update home set score list
+        homeSetScoreAdapter.notifyDataSetChanged();
+    }
+
+    private void setGuestSetScores(Game game) {
         // get guest set scores
             // remove last comma
-        String clickedGuestSetScores = game.getGuestSetScores().substring(0, game.getGuestSetScores().length() - 1);
+        String clickedGameGuestSetScores = game.getGuestSetScores().substring(0, game.getGuestSetScores().length() - 1);
             // split to array list
-        ArrayList<String>  clickedGuestHomeSetScores = splitToArrayList(clickedGuestSetScores, ",");
+        ArrayList<String> guestSetScore = splitToArrayList(clickedGameGuestSetScores, ",");
         // set guest set scores
-        for (int i = 0; i < clickedGuestHomeSetScores.size(); i++) {
-            guestSetScores.add(clickedGuestHomeSetScores.get(i));
+        for (int i = 0; i < guestSetScore.size(); i++) {
+            guestSetScores.add(guestSetScore.get(i));
         }
-
+        // update guest set score list
+        guestSetScoreAdapter.notifyDataSetChanged();
     }
 
     public static ArrayList<String> splitToArrayList(String str, String delimiter) {

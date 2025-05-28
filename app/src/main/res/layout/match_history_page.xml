@@ -6,7 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MatchHistoryPage"
-    android:background="@color/white">
+    android:background="@drawable/main_bg">
+
+    <ImageView
+        android:layout_width="200dp"
+        android:layout_height="250dp"
+        android:src="@drawable/bg_image_design"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="-60dp"
+        android:layout_marginEnd="-20dp"
+        android:alpha="0.6"/>
+
 <!--    game details overlay-->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/gameDetailsOverlay"
@@ -16,250 +27,302 @@
         android:elevation="1dp"
         android:visibility="gone">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/settingsPopup"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/soft_squre_white"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginTop="20dp"
-            android:paddingTop="15dp"
-            android:paddingBottom="25dp"
-            android:paddingHorizontal="15dp">
+            android:scrollbars="none">
 
-            <TextView
-                android:id="@+id/gameDetailsTitle"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="GAME DETAILS"
-                android:textSize="17sp"
-                android:letterSpacing="0.03"
-                android:textColor="@color/dark_gray"
-                style="@style/form_team_name_style"
-                android:layout_marginStart="0dp"/>
-
-            <View
-                android:id="@+id/gameDetailsTitleDivider"
-                app:layout_constraintTop_toBottomOf="@id/gameDetailsTitle"
-                android:layout_marginTop="5dp"
-                style="@style/game_details_divider" />
-
-<!--            home set scores-->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/homeSetScoreRecyclerview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                app:layout_constraintTop_toBottomOf="@id/gameDetailsTitleDivider"
-                app:layout_constraintStart_toEndOf="@id/homeSetScoreLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="15dp"/>
-
-            <TextView
-                android:id="@+id/homeSetScoreLabel"
-                app:layout_constraintBottom_toBottomOf="@+id/homeSetScoreRecyclerview"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="Home"
-                android:textSize="19sp"
-                style="@style/form_team_name_style"/>
-
-            <View
-                android:id="@+id/setScoreDivider"
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:background="@color/gray"
-                app:layout_constraintStart_toStartOf="@id/homeSetScoreLabel"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/homeSetScoreRecyclerview"
-                android:layout_marginTop="5dp"/>
-<!--            guest set scores-->
-
-            <TextView
-                android:id="@+id/guestSetScoreLabel"
-                app:layout_constraintTop_toTopOf="@id/guestSetScoreRecyclerview"
-                app:layout_constraintStart_toStartOf="parent"
-                android:text="Guest"
-                android:textSize="19sp"
-                android:textColor="@color/team2_yellow"
-                style="@style/form_team_name_style"/>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/guestSetScoreRecyclerview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:minHeight="50dp"
-                app:layout_constraintTop_toBottomOf="@id/setScoreDivider"
-                app:layout_constraintStart_toEndOf="@id/homeSetScoreLabel"
-                android:paddingStart="2.3dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="5dp"/>
-
-            <!--    statistics-->
-            <TextView
-                android:id="@+id/statsTitle"
-                app:layout_constraintTop_toBottomOf="@id/guestSetScoreRecyclerview"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:text="STATISTICS"
-                android:textSize="17sp"
-                android:letterSpacing="0.03"
-                android:textColor="@color/dark_gray"
-                style="@style/form_team_name_style"
-                android:layout_marginStart="0dp"/>
-
-            <View
-                android:id="@+id/statsDivider"
-                app:layout_constraintTop_toBottomOf="@id/statsTitle"
-                style="@style/game_details_divider"
-                android:layout_marginTop="3dp"/>
-<!--            home stats label-->
-            <TextView
-                android:id="@+id/homeStatsLabel"
-                app:layout_constraintTop_toBottomOf="@id/statsDivider"
-                app:layout_constraintStart_toStartOf="@id/statsDivider"
-                app:layout_constraintEnd_toEndOf="@id/statsDivider"
-                android:text="Home"
-                android:textSize="17sp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
-                style="@style/form_team_name_style"/>
-
-<!--            home stats table header-->
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/homeStatsTableHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/homeStatsLabel"
-                android:background="@color/gray"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="5dp"
-                >
+                android:paddingBottom="20dp">
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/gameDetailsPopup"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="20dp"
+                    android:background="@drawable/soft_squre_white"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="20dp"
+                    android:paddingTop="15dp"
+                    android:paddingBottom="25dp"
+                    android:paddingHorizontal="15dp">
 
                     <TextView
-                        android:id="@+id/playerHeader"
-                        android:text="Player"
-                        android:layout_width="85dp"
-                        style="@style/stats_table_header"/>
+                        android:id="@+id/gameDetailsTitle"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="Game Details"
+                        android:textSize="18sp"
+                        android:letterSpacing="0.03"
+                        android:textColor="@color/dark_gray"
+                        style="@style/form_team_name_style"
+                        android:layout_marginStart="0dp"/>
+
+                    <View
+                        android:id="@+id/gameDetailsTitleDivider"
+                        app:layout_constraintTop_toBottomOf="@id/gameDetailsTitle"
+                        android:layout_marginTop="5dp"
+                        style="@style/game_details_divider" />
+
+                    <!--            home set scores-->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/homeSetScoreRecyclerview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        app:layout_constraintTop_toBottomOf="@id/gameDetailsTitleDivider"
+                        app:layout_constraintStart_toEndOf="@id/homeSetScoreLabel"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="15dp"/>
 
                     <TextView
-                        android:id="@+id/spikeHeader"
-                        android:text="Spike"
-                        style="@style/stats_table_header" />
+                        android:id="@+id/homeSetScoreLabel"
+                        app:layout_constraintBottom_toBottomOf="@+id/homeSetScoreRecyclerview"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="Home"
+                        android:textSize="19sp"
+                        style="@style/form_team_name_style"/>
+
+                    <View
+                        android:id="@+id/setScoreDivider"
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:background="@color/gray"
+                        app:layout_constraintStart_toStartOf="@id/homeSetScoreLabel"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/homeSetScoreRecyclerview"
+                        android:layout_marginTop="5dp"/>
+                    <!--            guest set scores-->
 
                     <TextView
-                        android:id="@+id/blockHeader"
-                        android:text="Block"
-                        style="@style/stats_table_header" />
+                        android:id="@+id/guestSetScoreLabel"
+                        app:layout_constraintTop_toTopOf="@id/guestSetScoreRecyclerview"
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:text="Guest"
+                        android:textSize="19sp"
+                        android:textColor="@color/team2_yellow"
+                        style="@style/form_team_name_style"/>
 
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/guestSetScoreRecyclerview"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:minHeight="50dp"
+                        app:layout_constraintTop_toBottomOf="@id/setScoreDivider"
+                        app:layout_constraintStart_toEndOf="@id/homeSetScoreLabel"
+                        android:paddingStart="2.3dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"/>
+
+                    <!--    statistics-->
                     <TextView
-                        android:id="@+id/digHeader"
-                        android:text="Dig"
-                        style="@style/stats_table_header" />
+                        android:id="@+id/statsTitle"
+                        app:layout_constraintTop_toBottomOf="@id/guestSetScoreRecyclerview"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:text="Statictics"
+                        android:textSize="18sp"
+                        android:letterSpacing="0.02"
+                        android:textColor="@color/dark_gray"
+                        style="@style/form_team_name_style"
+                        android:layout_marginStart="0dp"/>
 
+                    <View
+                        android:id="@+id/statsDivider"
+                        app:layout_constraintTop_toBottomOf="@id/statsTitle"
+                        style="@style/game_details_divider"
+                        android:layout_marginTop="3dp"/>
+                    <!--            home stats label-->
                     <TextView
-                        android:id="@+id/aceHeader"
-                        android:text="Ace"
-                        style="@style/stats_table_header"
-                        android:layout_marginEnd="0dp"/>
+                        android:id="@+id/homeStatsLabel"
+                        app:layout_constraintTop_toBottomOf="@id/statsDivider"
+                        app:layout_constraintStart_toStartOf="@id/statsDivider"
+                        app:layout_constraintEnd_toEndOf="@id/statsDivider"
+                        android:text="Home"
+                        android:textSize="17sp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        style="@style/form_team_name_style"/>
 
-                </LinearLayout>
+                    <!--            home stats table header-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/homeStatsTableHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/homeStatsLabel"
+                        android:background="@color/gray"
+                        android:paddingVertical="4dp"
+                        android:layout_marginTop="5dp"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/playerHeader"
+                                android:text="Player"
+                                android:layout_width="85dp"
+                                style="@style/stats_table_header"/>
+
+                            <TextView
+                                android:id="@+id/spikeHeader"
+                                android:text="Spike"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/blockHeader"
+                                android:text="Block"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/digHeader"
+                                android:text="Dig"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/aceHeader"
+                                android:text="Ace"
+                                style="@style/stats_table_header"
+                                android:layout_marginEnd="0dp"/>
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/homeStatsRecyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/homeStatsTableHeader"
+                        android:layout_marginTop="3dp"/>
+                    <!--            guest stats label-->
+                    <TextView
+                        android:id="@+id/guestStatsLabel"
+                        app:layout_constraintTop_toBottomOf="@id/homeStatsRecyclerview"
+                        app:layout_constraintStart_toStartOf="@id/statsDivider"
+                        app:layout_constraintEnd_toEndOf="@id/statsDivider"
+                        android:text="Guest"
+                        android:textSize="17sp"
+                        android:layout_marginStart="0dp"
+                        android:layout_marginTop="10dp"
+                        style="@style/form_team_name_style"
+                        android:textColor="@color/team2_yellow"/>
+                    <!--                guest stats table header-->
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/guestStatsTableHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/guestStatsLabel"
+                        android:background="@color/gray"
+                        android:paddingVertical="4dp"
+                        android:layout_marginTop="5dp"
+                        >
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/playerHeader1"
+                                android:text="Player"
+                                android:layout_width="85dp"
+                                style="@style/stats_table_header"/>
+
+                            <TextView
+                                android:id="@+id/spikeHeader1"
+                                android:text="Spike"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/blockHeader1"
+                                android:text="Block"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/digHeader1"
+                                android:text="Dig"
+                                style="@style/stats_table_header" />
+
+                            <TextView
+                                android:id="@+id/aceHeader1"
+                                android:text="Ace"
+                                style="@style/stats_table_header"
+                                android:layout_marginEnd="0dp"/>
+
+                        </LinearLayout>
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/guestStatsRecyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/guestStatsTableHeader"
+                        android:layout_marginTop="3dp"/>
+
+                    <LinearLayout
+                        android:id="@+id/deleteMatchHistoryButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@drawable/soft_square_red"
+                        app:layout_constraintTop_toBottomOf="@id/guestStatsRecyclerview"
+                        app:layout_constraintEnd_toEndOf="@id/guestStatsRecyclerview"
+                        android:gravity="center_vertical"
+                        android:paddingVertical="5dp"
+                        android:paddingHorizontal="10dp"
+                        android:layout_marginTop="15dp">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/white_delete_icon"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Delete"
+                            android:textColor="@color/white"
+                            android:fontFamily="@font/roboto_regular"
+                            android:textStyle="bold"
+                            android:textSize="13sp"
+                            android:layout_marginStart="5dp"/>
+                    </LinearLayout>
+
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <ImageView
+                    android:id="@+id/closeGameDetailsButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/circled_close_icon"
+                    app:layout_constraintTop_toBottomOf="@id/gameDetailsPopup"
+                    app:layout_constraintStart_toStartOf="@id/gameDetailsPopup"
+                    app:layout_constraintEnd_toEndOf="@id/gameDetailsPopup"
+                    android:layout_marginTop="20dp"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/homeStatsRecyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/homeStatsTableHeader"
-                android:layout_marginTop="3dp"/>
-<!--            guest stats label-->
-            <TextView
-                android:id="@+id/guestStatsLabel"
-                app:layout_constraintTop_toBottomOf="@id/homeStatsRecyclerview"
-                app:layout_constraintStart_toStartOf="@id/statsDivider"
-                app:layout_constraintEnd_toEndOf="@id/statsDivider"
-                android:text="Guest"
-                android:textSize="17sp"
-                android:layout_marginStart="0dp"
-                android:layout_marginTop="10dp"
-                style="@style/form_team_name_style"
-                android:textColor="@color/team2_yellow"/>
-<!--                guest stats table header-->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/guestStatsTableHeader"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/guestStatsLabel"
-                android:background="@color/gray"
-                android:paddingVertical="4dp"
-                android:layout_marginTop="5dp"
-                >
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/playerHeader1"
-                        android:text="Player"
-                        android:layout_width="85dp"
-                        style="@style/stats_table_header"/>
-
-                    <TextView
-                        android:id="@+id/spikeHeader1"
-                        android:text="Spike"
-                        style="@style/stats_table_header" />
-
-                    <TextView
-                        android:id="@+id/blockHeader1"
-                        android:text="Block"
-                        style="@style/stats_table_header" />
-
-                    <TextView
-                        android:id="@+id/digHeader1"
-                        android:text="Dig"
-                        style="@style/stats_table_header" />
-
-                    <TextView
-                        android:id="@+id/aceHeader1"
-                        android:text="Ace"
-                        style="@style/stats_table_header"
-                        android:layout_marginEnd="0dp"/>
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/guestStatsRecyclerview"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toBottomOf="@id/guestStatsTableHeader"
-                android:layout_marginTop="3dp"/>
-
-
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </ScrollView>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
     <ImageView
         android:id="@+id/backButton"
@@ -292,6 +355,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="10dp"
         android:layout_marginHorizontal="15dp"/>
+
+    <TextView
+        android:id="@+id/emptyMatchHistoryText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Match history is empty"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/dark_gray"
+        android:textSize="11sp"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/matchHistoryRecyclerview"

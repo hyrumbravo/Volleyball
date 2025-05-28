@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.volleyball.R;
+import com.example.volleyball.models.Player;
 import com.example.volleyball.models.Stats;
 import com.example.volleyball.viewholders.StatsItemViewHolder;
 import java.util.List;
@@ -20,6 +21,11 @@ public class StatsTableAdapter extends RecyclerView.Adapter<StatsItemViewHolder>
     public StatsTableAdapter(Context context, List<Stats> items) {
         this.context = context;
         this.items = items;
+    }
+
+    public void updateStatsList(List<Stats> newList) {
+        this.items = newList;
+        notifyDataSetChanged();
     }
 
     @NonNull
